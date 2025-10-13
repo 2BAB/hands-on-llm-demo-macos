@@ -1,9 +1,10 @@
 # Hands-on LLM Demo for macOS
 
-A hands-on demonstration project for running [Samples](https://github.com/HandsOnLLM/Hands-On-Large-Language-Models) of 'Hands on Large Language Models (LLM)' on macOS, using Microsoft's Phi-3-mini-4k-instruct model.
+Convert [samples](https://github.com/HandsOnLLM/Hands-On-Large-Language-Models) of 'Hands on Large Language Models (LLM)' **to run on macOS**.
 
-- For `/note` folder, it contains some Q&A that I was confused about which was answering by Gemini 2.5 Flash/Pro.
-- For `/result` folder, it contains the result of running the script per chapter.
+- You can find all scripts such as `ch01.py` in the root directory.
+- For `/note` directory, it contains some Q&A that I was confused about which was answering by Gemini 2.5 Flash/Pro.
+- For `/result` directory, it contains the result of running the script per chapter.
 
 ## Requirements
 
