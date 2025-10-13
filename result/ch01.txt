@@ -1,0 +1,7 @@
+ $uv run python ch01.py
+
+`torch_dtype` is deprecated! Use `dtype` instead!
+Loading checkpoint shards: 100%|██████| 4/4 [00:09<00:00,  2.40s/it]
+Device set to use mps
+The following generation flags are not valid and may be ignored: ['temperature']. Set `TRANSFORMERS_VERBOSITY=info` for more details.
+ Why did the chicken join the band? Because it had the drumsticks!
