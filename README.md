@@ -8,10 +8,10 @@ Convert [samples](https://github.com/HandsOnLLM/Hands-On-Large-Language-Models) 
 
 ## Requirements
 
-- macOS (Apple Silicon M1/M2/M3 recommended)
-- Python 3.13+
+- macOS (Apple Silicon M series recommended)
+- Python 3.12
 - [uv](https://github.com/astral-sh/uv) package manager
-- At least 10GB of free disk space (for model storage)
+- At least 16GB of free disk space (for model storage)
 
 ## Setup Instructions
 
@@ -35,10 +35,6 @@ The project uses uv to manage dependencies, which will automatically install pac
 uv sync
 ```
 
-Dependencies include:
-- `transformers>=4.40.1` - Hugging Face Transformers library
-- `accelerate>=0.27.2` - Model acceleration library
-
 ### 4. Download the model locally
 
 First-time setup requires downloading the Phi-3 model (~7.6GB):
@@ -55,7 +51,7 @@ This will download the model to the `./model/Phi-3-mini-4k-instruct/` directory.
 
 ### Run the example script
 
-After downloading the model, run the example script:
+After downloading the model, run the example script such as `ch01.py`:
 
 ```bash
 uv run python ch01.py
@@ -82,7 +78,9 @@ messages = [
 README.md              # Project documentation
 pyproject.toml         # Project configuration and dependencies
 download_model.py      # Model download script
-ch01.py               # Example: Basic text generation
+ch01.py               # Example ch01: Basic text generation
+note/                  # Q&A notes
+result/                # Result of running the script per chapter
 model/                # Model storage directory (created after first run)
   Phi-3-mini-4k-instruct/
   ...
