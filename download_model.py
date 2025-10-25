@@ -5,9 +5,17 @@ Models are downloaded in parallel using multiple threads for faster completion.
 This script downloads models used in:
 - Chapter 1: Basic text generation with Phi-3
 - Chapter 2: Tokens, embeddings, and various tokenizers
+- Chapter 3: Looking inside transformer LLMs
+- Chapter 4: Text classification
 """
 
-from transformers import AutoModelForCausalLM, AutoTokenizer, AutoModel
+from transformers import (
+    AutoModelForCausalLM,
+    AutoTokenizer,
+    AutoModel,
+    AutoModelForSeq2SeqLM,
+    AutoModelForSequenceClassification
+)
 from sentence_transformers import SentenceTransformer
 import gensim.downloader as api
 import os
@@ -141,6 +149,60 @@ def download_sentence_transformer(model_name, local_dir):
         return error_msg
 
 
+def download_seq2seq_model(model_name, local_dir):
+    """Download a seq2seq model (like T5, BART) with proper model class."""
+    try:
+        if check_model_exists(local_dir):
+            print(f"[{model_name}] ⊙ Already exists, skipping download")
+            return f"⊙ {model_name} (skipped)"
+
+        print(f"[{model_name}] ⟳ Downloading seq2seq model and tokenizer...")
+        os.makedirs(local_dir, exist_ok=True)
+
+        print(f"[{model_name}]   → Downloading model weights...")
+        model = AutoModelForSeq2SeqLM.from_pretrained(model_name)
+        model.save_pretrained(local_dir)
+
+        print(f"[{model_name}]   → Downloading tokenizer...")
+        tokenizer = AutoTokenizer.from_pretrained(model_name)
+        tokenizer.save_pretrained(local_dir)
+
+        print(f"[{model_name}] ✓ Download complete")
+        return f"✓ {model_name}"
+    except Exception as e:
+        error_msg = f"✗ {model_name}: {str(e)}"
+        print(f"[{model_name}] ✗ Error: {str(e)}")
+        traceback.print_exc()
+        return error_msg
+
+
+def download_sequence_classification_model(model_name, local_dir):
+    """Download a sequence classification model (like RoBERTa sentiment)."""
+    try:
+        if check_model_exists(local_dir):
+            print(f"[{model_name}] ⊙ Already exists, skipping download")
+            return f"⊙ {model_name} (skipped)"
+
+        print(f"[{model_name}] ⟳ Downloading classification model and tokenizer...")
+        os.makedirs(local_dir, exist_ok=True)
+
+        print(f"[{model_name}]   → Downloading model weights...")
+        model = AutoModelForSequenceClassification.from_pretrained(model_name)
+        model.save_pretrained(local_dir)
+
+        print(f"[{model_name}]   → Downloading tokenizer...")
+        tokenizer = AutoTokenizer.from_pretrained(model_name)
+        tokenizer.save_pretrained(local_dir)
+
+        print(f"[{model_name}] ✓ Download complete")
+        return f"✓ {model_name}"
+    except Exception as e:
+        error_msg = f"✗ {model_name}: {str(e)}"
+        print(f"[{model_name}] ✗ Error: {str(e)}")
+        traceback.print_exc()
+        return error_msg
+
+
 def download_gensim_embeddings(model_name):
     """Download word embeddings from gensim."""
     try:
@@ -172,7 +234,6 @@ def main():
         ("tokenizer", "bert-base-uncased", "./model/bert-base-uncased"),
         ("tokenizer", "bert-base-cased", "./model/bert-base-cased"),
         ("tokenizer", "gpt2", "./model/gpt2"),
-        ("tokenizer", "google/flan-t5-small", "./model/flan-t5-small"),
         ("tokenizer", "Xenova/gpt-4", "./model/gpt-4-tokenizer"),
         ("tokenizer", "bigcode/starcoder2-15b", "./model/starcoder2-15b"),
         ("tokenizer", "facebook/galactica-1.3b", "./model/galactica-1.3b"),
@@ -186,6 +247,10 @@ def main():
 
         # Chapter 2: Word embeddings (gensim - cached automatically)
         ("gensim", "glove-wiki-gigaword-50", None),
+
+        # Chapter 4: Text classification models
+        ("sequence_classification", "cardiffnlp/twitter-roberta-base-sentiment-latest", "./model/twitter-roberta-base-sentiment-latest"),
+        ("seq2seq", "google/flan-t5-small", "./model/flan-t5-small"),
     ]
 
     print(f"Total models to download: {len(tasks)}\n")
@@ -205,6 +270,10 @@ def main():
                 future = executor.submit(download_auto_model, model_name, local_dir)
             elif task_type == "sentence_transformer":
                 future = executor.submit(download_sentence_transformer, model_name, local_dir)
+            elif task_type == "seq2seq":
+                future = executor.submit(download_seq2seq_model, model_name, local_dir)
+            elif task_type == "sequence_classification":
+                future = executor.submit(download_sequence_classification_model, model_name, local_dir)
             elif task_type == "gensim":
                 future = executor.submit(download_gensim_embeddings, model_name)
 

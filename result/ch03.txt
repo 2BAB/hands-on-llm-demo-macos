@@ -1,4 +1,4 @@
- uv run python3 ch03.py
+$ uv run python3 ch03.py
 
 ======================================================================
 Chapter 3 - Looking Inside Transformer LLMs

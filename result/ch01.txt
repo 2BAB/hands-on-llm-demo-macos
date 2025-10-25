@@ -1,4 +1,4 @@
- $uv run python ch01.py
+$uv run python ch01.py
 
 `torch_dtype` is deprecated! Use `dtype` instead!
 Loading checkpoint shards: 100%|██████| 4/4 [00:09<00:00,  2.40s/it]

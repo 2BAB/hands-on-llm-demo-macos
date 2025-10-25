@@ -1,0 +1,205 @@
+$ uv run python ch04.py
+
+======================================================================
+Chapter 4 - Text Classification
+Hands-On Large Language Models - macOS Edition
+======================================================================
+
+This demo covers text classification with:
+1. Representation Models
+   a. Task-specific models (RoBERTa)
+   b. Supervised classification with embeddings
+   c. Zero-shot classification
+   d. Average embeddings classification
+2. Generative Models
+   a. Encoder-decoder models (FLAN-T5)
+   b. ChatGPT API (optional)
+
+======================================================================
+Loading Rotten Tomatoes Dataset
+======================================================================
+
+Downloading dataset from Hugging Face...
+
+✓ Dataset loaded successfully
+  - Train samples: 8530
+  - Validation samples: 1066
+  - Test samples: 1066
+
+Sample data:
+  Text: the rock is destined to be the 21st century's new " conan " and that he's going ...
+  Label: 1 (0=negative, 1=positive)
+
+======================================================================
+PART 1a: Task-specific Sentiment Classification (RoBERTa)
+======================================================================
+
+[1/3] Loading RoBERTa sentiment model from local directory...
+Device set to use mps
+✓ Model loaded successfully
+
+[2/3] Running inference on test set...
+(This may take a few minutes)
+100%|██████████████████████| 1066/1066 [00:19<00:00, 55.70it/s]
+
+✓ Inference complete
+Generated 1066 predictions
+
+[3/3] Evaluating performance...
+                 precision    recall  f1-score   support
+
+Negative Review       0.76      0.86      0.81       533
+Positive Review       0.84      0.72      0.78       533
+
+       accuracy                           0.79      1066
+      macro avg       0.80      0.79      0.79      1066
+   weighted avg       0.80      0.79      0.79      1066
+
+
+✓ Part 1a Complete
+
+======================================================================
+PART 1b: Supervised Classification with Embeddings
+======================================================================
+
+[1/4] Loading sentence transformer model...
+✓ Model loaded
+
+[2/4] Converting text to embeddings...
+  → Encoding training set...
+Batches: 100%|███████████████| 267/267 [00:13<00:00, 20.41it/s]
+  → Encoding test set...
+Batches: 100%|█████████████████| 34/34 [00:01<00:00, 19.19it/s]
+
+✓ Embeddings created
+  Training embeddings shape: (8530, 768)
+  Test embeddings shape: (1066, 768)
+
+[3/4] Training Logistic Regression classifier...
+✓ Classifier trained
+
+[4/4] Making predictions and evaluating...
+                 precision    recall  f1-score   support
+
+Negative Review       0.85      0.86      0.85       533
+Positive Review       0.86      0.85      0.85       533
+
+       accuracy                           0.85      1066
+      macro avg       0.85      0.85      0.85      1066
+   weighted avg       0.85      0.85      0.85      1066
+
+
+✓ Part 1b Complete
+
+======================================================================
+PART 1c: Zero-shot Classification
+======================================================================
+
+[1/3] Loading sentence transformer model...
+✓ Model loaded
+
+[2/3] Creating embeddings for label descriptions...
+  Label 0 (negative): 'A negative review'
+  Label 1 (positive): 'A positive review'
+✓ Label embeddings created
+
+[3/3] Classifying using cosine similarity...
+✓ Classification complete
+
+Evaluation:
+                 precision    recall  f1-score   support
+
+Negative Review       0.78      0.77      0.78       533
+Positive Review       0.77      0.79      0.78       533
+
+       accuracy                           0.78      1066
+      macro avg       0.78      0.78      0.78      1066
+   weighted avg       0.78      0.78      0.78      1066
+
+
+----------------------------------------------------------------------
+💡 Tip: Try different label descriptions!
+   - 'A very negative movie review' / 'A very positive movie review'
+   - 'Bad movie' / 'Good movie'
+   - Experiment to see how it affects performance
+----------------------------------------------------------------------
+
+✓ Part 1c Complete
+
+======================================================================
+PART 1d: Classification by Averaging Target Embeddings
+======================================================================
+
+[1/3] Loading sentence transformer and creating embeddings...
+Batches: 100%|███████████████| 267/267 [00:12<00:00, 21.89it/s]
+Batches: 100%|█████████████████| 34/34 [00:01<00:00, 19.71it/s]
+✓ Embeddings created
+
+[2/3] Averaging embeddings per class...
+✓ Averaged embeddings shape: (2, 768)
+  Class 0 (negative): averaged from 4265 samples
+  Class 1 (positive): averaged from 4265 samples
+
+[3/3] Finding best matching embeddings...
+✓ Classification complete
+
+Evaluation:
+                 precision    recall  f1-score   support
+
+Negative Review       0.85      0.84      0.84       533
+Positive Review       0.84      0.85      0.84       533
+
+       accuracy                           0.84      1066
+      macro avg       0.84      0.84      0.84      1066
+   weighted avg       0.84      0.84      0.84      1066
+
+
+✓ Part 1d Complete
+
+======================================================================
+PART 2: Classification with Encoder-Decoder Models (FLAN-T5)
+======================================================================
+
+[1/4] Loading FLAN-T5 model from local directory...
+Device set to use mps
+✓ Model loaded successfully
+
+[2/4] Preparing prompts...
+Example prompt:
+  'Is the following sentence positive or negative? lovingly photographed in the manner of a golden book...'
+
+[3/4] Running inference on test set...
+(This may take a few minutes)
+100%|██████████████████████| 1066/1066 [01:29<00:00, 11.92it/s]
+
+✓ Inference complete
+Generated 1066 predictions
+
+[4/4] Evaluating performance...
+                 precision    recall  f1-score   support
+
+Negative Review       0.83      0.85      0.84       533
+Positive Review       0.85      0.83      0.84       533
+
+       accuracy                           0.84      1066
+      macro avg       0.84      0.84      0.84      1066
+   weighted avg       0.84      0.84      0.84      1066
+
+
+✓ Part 2 Complete
+
+======================================================================
+PART 3: Classification with ChatGPT (Optional)
+======================================================================
+
+⚠ OPENAI_API_KEY not found in environment variables
+  To use this feature:
+  1. Get an API key from https://platform.openai.com/
+  2. Set it: export OPENAI_API_KEY='your-key-here'
+  3. Re-run this script
+
+✓ Part 3 Skipped
+
+======================================================================
+All demos complete!
+======================================================================

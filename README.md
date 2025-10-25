@@ -11,7 +11,7 @@ Convert [samples](https://github.com/HandsOnLLM/Hands-On-Large-Language-Models) 
 - macOS (Apple Silicon M series recommended)
 - Python 3.12
 - [uv](https://github.com/astral-sh/uv) package manager
-- At least 16GB of free disk space (for model storage)
+- At least 20GB of free disk space (for model storage)
 
 ## Setup Instructions
 
